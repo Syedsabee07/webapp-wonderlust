@@ -1,23 +1,64 @@
-verion: "3.8"
+# verion: "3.8"
+# services:
+#   mongodb:
+#     container_name: mongo
+#     image: mongo: latest
+#     ports: 
+#       - "27017:27017"
+
+#   backend:
+#     container_name: backend
+#     build: ./backend
+#     env_file:
+#       - ./backend/ .env.sample
+#     ports:
+#       - "5000:5000"
+
+#   frontend:
+#     container_name: frontend
+#     build: ./frontend
+#     env_file:
+#       - ./frontend/ .env.sample
+#     ports:
+#       - "5173:5173"
+
+version: "3.8"
 services:
   mongodb:
     container_name: mongo
-    image: mongo: latest
-    ports: 
+    image: mongo:latest
+    volumes:
+      - ./backend/data:/data
+    ports:
       - "27017:27017"
-
+    
   backend:
     container_name: backend
     build: ./backend
     env_file:
-      - ./backend/ .env.sample
+      - ./backend/.env.sample
     ports:
       - "5000:5000"
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
 
   frontend:
     container_name: frontend
     build: ./frontend
-    env_file:
-      - ./frontend/ .env.sample
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+    env_file:
+      - ./frontend/.env.sample
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+volumes:
+  logs:
