@@ -1,48 +1,21 @@
-FROM node:21
-
-WORKDIR /app
-
-COPY . .
-
-RUN npm i
-RUN npm run test
-
-COPY .env.sample .env
-COPY .env.docker .env
-
-EXPOSE 5000
-
-CMD ["npm", "start"]
-
-
-
-
-
-
-
-
-#MULTI-STAGE-DOCKERFILE
-
 
 # Base image for backend
-#FROM node:21 
+FROM node:21 
 
 # Set the working directory inside the container
-#WORKDIR /app
+WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-#COPY package*.json ./
+COPY package*.json ./
 
 # Install required dependencies
-#RUN npm install
+RUN npm install
 
 # Copy the rest of the application code to the working directory
-#COPY . .
-#COPY .env.sample .env
-
+COPY . .
+COPY .env.sample .env
 # Expose the port the app runs on
-#EXPOSE 5000
+EXPOSE 5000
 
 # Command to start the backend server
-#CMD ["npm", "start"]
-
+CMD ["npm", "start"]
